@@ -112,7 +112,6 @@
     .lb-close:hover{border-color:var(--gold);background:rgba(201,169,110,0.1);}
     .lb-close svg{width:16px;height:16px;stroke:var(--cream);fill:none;}
     .lb-prev,.lb-next{width:50px;height:50px;border:1px solid rgba(201,169,110,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;flex-shrink:0;}
-    
     .lb-prev:hover,.lb-next:hover{border-color:var(--gold);background:rgba(201,169,110,0.1);}
     .lb-prev svg,.lb-next svg{width:18px;height:18px;stroke:var(--cream);fill:none;}
     .lb-caption{display:none;}
@@ -417,13 +416,13 @@
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%202.jpg",
         caption: "Grande table bois massif",
         price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d’épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d’une résine alimentaire transparente matte pour une durabilité maximale."
+        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale."
       },
       {
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20double.jpg",
         caption: "Luminaire double",
         price: "1 590 €",
-        desc: "Deux rectangles en douglas s’emboîtent pour occuper l’espace disponible sur ce vide sur séjour. Chaque rectangle est équipé de 2 réglettes LED en blanc chaud pour un sentiment de chaleur."
+        desc: "Deux rectangles en douglas s'emboîtent pour occuper l'espace disponible sur ce vide sur séjour. Chaque rectangle est équipé de 2 réglettes LED en blanc chaud pour un sentiment de chaleur."
       },
       {
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20basse.jpg",
@@ -447,7 +446,7 @@
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%203.jpg",
         caption: "Grande table — vue ensemble",
         price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d’épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d’une résine alimentaire transparente matte pour une durabilité maximale."
+        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale."
       },
       {
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20queyras.jpg",
@@ -459,7 +458,7 @@
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%201.jpg",
         caption: "Grande table bois",
         price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d’épaisseur, pieds en acier à forme géométrique."
+        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique."
       },
       {
         src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20salle%20%C3%A0%20manger%20plat.jpg",
@@ -468,36 +467,62 @@
         desc: "Luminaire éclairage haut et bas sur mesure pour salle à manger, en bois et métal."
       },
     ];
+
     let lbIndex = 0;
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
-    const lbCaption = document.getElementById('lb-caption');
+    // CORRECTION : utilisation de querySelector au lieu de getElementById
+    // car l'élément .lb-caption n'a pas d'attribut id
+    const lbCaption = document.querySelector('.lb-caption');
     const lbCounter = document.getElementById('lb-counter');
 
-    function openLightbox(i) { lbIndex = i; updateLightbox(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    function closeLightboxOnBg(e) { if (e.target === lb) closeLightbox(); }
-    function lbNav(dir) { lbIndex = (lbIndex + dir + lbData.length) % lbData.length; updateLightbox(); }
+    function openLightbox(i) {
+      lbIndex = i;
+      updateLightbox();
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeLightboxOnBg(e) {
+      if (e.target === lb) closeLightbox();
+    }
+
+    function lbNav(dir) {
+      lbIndex = (lbIndex + dir + lbData.length) % lbData.length;
+      updateLightbox();
+    }
+
     function updateLightbox() {
       const item = lbData[lbIndex];
       lbImg.src = item.src;
       lbImg.alt = item.caption;
-      lbCaption.textContent = item.caption;
+      // Mise à jour de la caption uniquement si l'élément existe
+      if (lbCaption) lbCaption.textContent = item.caption;
       lbCounter.textContent = (lbIndex + 1) + ' / ' + lbData.length;
       document.getElementById('lb-desc').textContent = item.desc || '';
       const priceEl = document.getElementById('lb-price');
       priceEl.textContent = item.price || '';
       priceEl.style.display = item.price ? 'inline-block' : 'none';
     }
+
     document.addEventListener('keydown', e => {
       if (!lb.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowLeft') lbNav(-1);
       if (e.key === 'ArrowRight') lbNav(1);
     });
+
     let touchStartX = 0;
     lb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-    lb.addEventListener('touchend', e => { const diff = touchStartX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1); });
+    lb.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
+    });
   </script>
 </body>
 </html>
