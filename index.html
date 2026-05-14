@@ -12,6 +12,7 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%201.jpg">
   <link rel="canonical" href="https://atelieraltitude.fr">
+  <link rel="icon" type="image/png" href="https://github.com/sbrum05/atelieraltitude/blob/main/favicon-256x256.png?raw=true">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"LocalBusiness","name":"Atelier Altitude","description":"Création de mobilier et luminaires sur mesure en bois et bois-métal","image":"https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%201.jpg","priceRange":"€€€","makesOffer":[{"@type":"Offer","name":"Tables sur mesure"},{"@type":"Offer","name":"Luminaires sur mesure"},{"@type":"Offer","name":"Mobilier bois-métal"}]}
   </script>
@@ -471,8 +472,6 @@
     let lbIndex = 0;
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
-    // CORRECTION : utilisation de querySelector au lieu de getElementById
-    // car l'élément .lb-caption n'a pas d'attribut id
     const lbCaption = document.querySelector('.lb-caption');
     const lbCounter = document.getElementById('lb-counter');
 
@@ -501,7 +500,6 @@
       const item = lbData[lbIndex];
       lbImg.src = item.src;
       lbImg.alt = item.caption;
-      // Mise à jour de la caption uniquement si l'élément existe
       if (lbCaption) lbCaption.textContent = item.caption;
       lbCounter.textContent = (lbIndex + 1) + ' / ' + lbData.length;
       document.getElementById('lb-desc').textContent = item.desc || '';
