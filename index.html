@@ -408,7 +408,7 @@
         <!-- Honeypot anti-spam (invisible) -->
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
         <!-- Redirection après envoi réussi -->
-        <input type="hidden" name="_next" value="https://atelieraltitude.fr/merci">
+        <input type="hidden" name="_next" value="https://atelieraltitude.fr/merci.html">
 
         <button type="submit" class="btn-submit" id="submit-btn">Envoyer ma demande</button>
         <p class="form-status" id="form-status"></p>
@@ -521,7 +521,7 @@
 
         if (response.ok) {
           // Succès → redirection vers la page de confirmation
-          window.location.href = 'https://atelieraltitude.fr/merci';
+          window.location.href = 'https://atelieraltitude.fr/merci.html';
         } else {
           // Erreur serveur Formspree
           const data = await response.json();
