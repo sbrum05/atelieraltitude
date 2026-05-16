@@ -19,6 +19,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Darker+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFH20TKKTS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VFH20TKKTS');
+  </script>
   <style>
     :root{--cream:#F5F0E8;--charcoal:#1C1A17;--brown:#3D2B1F;--copper-light:#C4855A;--stone:#8C7B6E;--stone-light:#B5A898;--gold:#C9A96E;--dark-bg:#13110E;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -408,7 +416,7 @@
         <!-- Honeypot anti-spam (invisible) -->
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
         <!-- Redirection après envoi réussi -->
-        <input type="hidden" name="_next" value="https://atelieraltitude.fr/merci.html">
+        <input type="hidden" name="_next" value="https://atelieraltitude.fr/merci">
 
         <button type="submit" class="btn-submit" id="submit-btn">Envoyer ma demande</button>
         <p class="form-status" id="form-status"></p>
@@ -521,7 +529,7 @@
 
         if (response.ok) {
           // Succès → redirection vers la page de confirmation
-          window.location.href = 'https://atelieraltitude.fr/merci.html';
+          window.location.href = 'https://atelieraltitude.fr/merci';
         } else {
           // Erreur serveur Formspree
           const data = await response.json();
