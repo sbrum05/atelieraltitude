@@ -166,6 +166,10 @@
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
     .btn-submit{background:var(--gold);color:var(--dark-bg);font-family:'Darker Grotesque',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border:none;padding:1rem 3rem;cursor:pointer;transition:all 0.3s;width:100%;margin-top:0.5rem;}
     .btn-submit:hover{background:var(--copper-light);}
+    .btn-submit:disabled{opacity:0.6;cursor:not-allowed;}
+    .form-status{margin-top:1rem;font-size:1rem;display:none;padding:0.8rem 1rem;border-left:3px solid var(--gold);}
+    .form-status.error{color:var(--copper-light);border-color:var(--copper-light);}
+    .form-status.success{color:var(--gold);}
 
     /* FOOTER */
     footer{background:var(--charcoal);padding:3rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,169,110,0.1);}
@@ -362,19 +366,57 @@
       <div class="contact-detail"><div class="icon"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div><div class="info"><strong>Téléphone</strong>+33 (0)6 33 70 55 23</div></div>
       <div class="contact-detail"><div class="icon"><svg viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div class="info"><strong>Atelier</strong> Villar-St-Pancrace (Briançon) Hautes-Alpes, France</div></div>
     </div>
+
+    <!-- ===== FORMULAIRE FORMSPREE ===== -->
     <div class="contact-right">
       <h3>Décrivez votre projet</h3>
-      <div>
+      <form id="contact-form" action="https://formspree.io/f/mzdonynq" method="POST">
+
         <div class="form-row">
-          <div class="form-group"><label for="fname">Prénom</label><input type="text" id="fname" name="fname" placeholder="Jean" autocomplete="given-name"></div>
-          <div class="form-group"><label for="lname">Nom</label><input type="text" id="lname" name="lname" placeholder="Dupont" autocomplete="family-name"></div>
+          <div class="form-group">
+            <label for="fname">Prénom</label>
+            <input type="text" id="fname" name="fname" placeholder="Jean" autocomplete="given-name" required>
+          </div>
+          <div class="form-group">
+            <label for="lname">Nom</label>
+            <input type="text" id="lname" name="lname" placeholder="Dupont" autocomplete="family-name" required>
+          </div>
         </div>
-        <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="jean.dupont@email.com" autocomplete="email"></div>
-        <div class="form-group"><label for="type">Type de projet</label><select id="type" name="type"><option value="" disabled selected>Choisir une catégorie</option><option>Table sur mesure</option><option>Table basse</option><option>Luminaire sur mesure</option><option>Mobilier bois-métal</option><option>Autre création</option></select></div>
-        <div class="form-group"><label for="message">Votre projet</label><textarea id="message" name="message" placeholder="Décrivez votre projet, vos dimensions, vos goûts, votre budget approximatif…"></textarea></div>
-        <button type="button" class="btn-submit" onclick="alert('Merci pour votre message ! Nous reviendrons vers vous très prochainement.')">Envoyer ma demande</button>
-      </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="jean.dupont@email.com" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="type">Type de projet</label>
+          <select id="type" name="type" required>
+            <option value="" disabled selected>Choisir une catégorie</option>
+            <option>Table sur mesure</option>
+            <option>Table basse</option>
+            <option>Luminaire sur mesure</option>
+            <option>Mobilier bois-métal</option>
+            <option>Autre création</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Votre projet</label>
+          <textarea id="message" name="message" placeholder="Décrivez votre projet, vos dimensions, vos goûts, votre budget approximatif…" required></textarea>
+        </div>
+
+        <!-- Honeypot anti-spam (invisible) -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <!-- Redirection après envoi réussi -->
+        <input type="hidden" name="_next" value="https://atelieraltitude.fr/merci">
+
+        <button type="submit" class="btn-submit" id="submit-btn">Envoyer ma demande</button>
+        <p class="form-status" id="form-status"></p>
+
+      </form>
     </div>
+    <!-- ===== FIN FORMULAIRE ===== -->
+
   </section>
 
   <footer>
@@ -384,9 +426,11 @@
   </footer>
 
   <script>
+    // NAV SCROLL
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 80));
 
+    // REVEAL ANIMATIONS
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -397,6 +441,7 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal, .step').forEach(el => observer.observe(el));
 
+    // SMOOTH SCROLL
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
@@ -407,100 +452,31 @@
 
     // LIGHTBOX
     const lbData = [
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/Grand%20luminaire%20plat%201.jpg",
-        caption: "Grand luminaire plat",
-        price: "1 290 €",
-        desc: "Grand luminaire de 2 mètres avec double ruban LED blanc chaud pour une lumière suffisante lors des repas, et un ruban LED vers le haut pour mettre en valeur la charpente."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%202.jpg",
-        caption: "Grande table bois massif",
-        price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20double.jpg",
-        caption: "Luminaire double",
-        price: "1 590 €",
-        desc: "Deux rectangles en douglas s'emboîtent pour occuper l'espace disponible sur ce vide sur séjour. Chaque rectangle est équipé de 2 réglettes LED en blanc chaud pour un sentiment de chaleur."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20basse.jpg",
-        caption: "Table basse",
-        price: "790 €",
-        desc: "Plateau en mélèze massif vernis et pieds en acier plat noir."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/Grand%20luminaire%20plat%202.jpg",
-        caption: "Luminaire plat — détail",
-        price: "1 290 €",
-        desc: "Grand luminaire de 2 mètres avec double ruban LED blanc chaud pour une lumière suffisante lors des repas, et un ruban LED vers le haut pour mettre en valeur la charpente."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20queyras%202.jpg",
-        caption: "Table Queyras",
-        price: "2 990 €",
-        desc: ""
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%203.jpg",
-        caption: "Grande table — vue ensemble",
-        price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20queyras.jpg",
-        caption: "Table Queyras",
-        price: "2 990 €",
-        desc: ""
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%201.jpg",
-        caption: "Grande table bois",
-        price: "3 390 €",
-        desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique."
-      },
-      {
-        src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20salle%20%C3%A0%20manger%20plat.jpg",
-        caption: "Luminaire salle à manger",
-        price: "1 190 €",
-        desc: "Luminaire éclairage haut et bas sur mesure pour salle à manger, en bois et métal."
-      },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/Grand%20luminaire%20plat%201.jpg", caption: "Grand luminaire plat", price: "1 290 €", desc: "Grand luminaire de 2 mètres avec double ruban LED blanc chaud pour une lumière suffisante lors des repas, et un ruban LED vers le haut pour mettre en valeur la charpente." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%202.jpg", caption: "Grande table bois massif", price: "3 390 €", desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20double.jpg", caption: "Luminaire double", price: "1 590 €", desc: "Deux rectangles en douglas s'emboîtent pour occuper l'espace disponible sur ce vide sur séjour. Chaque rectangle est équipé de 2 réglettes LED en blanc chaud pour un sentiment de chaleur." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20basse.jpg", caption: "Table basse", price: "790 €", desc: "Plateau en mélèze massif vernis et pieds en acier plat noir." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/Grand%20luminaire%20plat%202.jpg", caption: "Luminaire plat — détail", price: "1 290 €", desc: "Grand luminaire de 2 mètres avec double ruban LED blanc chaud pour une lumière suffisante lors des repas, et un ruban LED vers le haut pour mettre en valeur la charpente." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20queyras%202.jpg", caption: "Table Queyras", price: "2 990 €", desc: "" },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%203.jpg", caption: "Grande table — vue ensemble", price: "3 390 €", desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique. Le plateau est recouvert d'une résine alimentaire transparente matte pour une durabilité maximale." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/table%20queyras.jpg", caption: "Table Queyras", price: "2 990 €", desc: "" },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/grande%20table%201.jpg", caption: "Grande table bois", price: "3 390 €", desc: "Grande table de 3,1 m × 1,1 m en mélèze de la vallée de la Clarée (Briançon) sur 6 cm d'épaisseur, pieds en acier à forme géométrique." },
+      { src: "https://raw.githubusercontent.com/sbrum05/atelieraltitude/main/luminaire%20salle%20%C3%A0%20manger%20plat.jpg", caption: "Luminaire salle à manger", price: "1 190 €", desc: "Luminaire éclairage haut et bas sur mesure pour salle à manger, en bois et métal." },
     ];
 
     let lbIndex = 0;
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
-    const lbCaption = document.querySelector('.lb-caption');
     const lbCounter = document.getElementById('lb-counter');
 
-    function openLightbox(i) {
-      lbIndex = i;
-      updateLightbox();
-      lb.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-      lb.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function closeLightboxOnBg(e) {
-      if (e.target === lb) closeLightbox();
-    }
-
-    function lbNav(dir) {
-      lbIndex = (lbIndex + dir + lbData.length) % lbData.length;
-      updateLightbox();
-    }
-
+    function openLightbox(i) { lbIndex = i; updateLightbox(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    function closeLightboxOnBg(e) { if (e.target === lb) closeLightbox(); }
+    function lbNav(dir) { lbIndex = (lbIndex + dir + lbData.length) % lbData.length; updateLightbox(); }
     function updateLightbox() {
       const item = lbData[lbIndex];
       lbImg.src = item.src;
       lbImg.alt = item.caption;
-      if (lbCaption) lbCaption.textContent = item.caption;
       lbCounter.textContent = (lbIndex + 1) + ' / ' + lbData.length;
       document.getElementById('lb-desc').textContent = item.desc || '';
       const priceEl = document.getElementById('lb-price');
@@ -521,6 +497,47 @@
       const diff = touchStartX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 50) lbNav(diff > 0 ? 1 : -1);
     });
+
+    // ===== FORMULAIRE FORMSPREE =====
+    const form = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const formStatus = document.getElementById('form-status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Désactiver le bouton pendant l'envoi
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours…';
+      formStatus.style.display = 'none';
+      formStatus.className = 'form-status';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          // Succès → redirection vers la page de confirmation
+          window.location.href = 'https://atelieraltitude.fr/merci';
+        } else {
+          // Erreur serveur Formspree
+          const data = await response.json();
+          throw new Error(data.error || 'Erreur serveur');
+        }
+      } catch (err) {
+        // Afficher le message d'erreur
+        formStatus.style.display = 'block';
+        formStatus.className = 'form-status error';
+        formStatus.textContent = 'Une erreur est survenue. Merci de réessayer ou de nous contacter directement par email.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer ma demande';
+      }
+    });
+    // ===== FIN FORMULAIRE =====
+
   </script>
 </body>
 </html>
